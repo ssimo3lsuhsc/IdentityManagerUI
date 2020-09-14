@@ -12,11 +12,19 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
   </ItemGroup>
 
 
   <ItemGroup>
     <ProjectReference Include="..\IdentityManagerUI\IdentityManagerUI.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Areas\IdentityManager\Data\" />
+    <Folder Include="Areas\IdentityManager\Models\" />
+    <Folder Include="Areas\IdentityManager\Views\" />
   </ItemGroup>
 
 </Project>

@@ -16,15 +16,15 @@ namespace IdentityManagerUI.Areas.IdentityManager.Controllers
 {
     [Area("IdentityManager")]
     [Authorize(Roles = "Admin")]
-    public class HomeController : Controller
+    public abstract class HomeController<TUser, TRole> : Controller where TUser : ApplicationUser, new() where TRole : ApplicationRole
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly UserManager<TUser> _userManager;
+        private readonly RoleManager<TRole> _roleManager;
         private readonly ILogger _logger;
         private readonly Dictionary<string, string> _roles;
         private readonly Dictionary<string, string> _claimTypes;
-
-        public HomeController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, ILogger<HomeController> logger)
+        
+        public HomeController(UserManager<TUser> userManager, RoleManager<TRole> roleManager, ILogger<HomeController<TUser, TRole>> logger)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -93,7 +93,7 @@ namespace IdentityManagerUI.Areas.IdentityManager.Controllers
         {
             try
             {
-                var user = new ApplicationUser() { Email = email, UserName = userName };
+                var user = new TUser() { Email = email, UserName = userName };
 
                 var result = await _userManager.CreateAsync(user, password);
                 if (result.Succeeded)
@@ -256,7 +256,7 @@ namespace IdentityManagerUI.Areas.IdentityManager.Controllers
         {
             try
             {
-                var role = new ApplicationRole(name);
+                var role = (TRole) new ApplicationRole(name);
 
                 var result = await _roleManager.CreateAsync(role);
                 if (result.Succeeded)
@@ -335,4 +335,9 @@ namespace IdentityManagerUI.Areas.IdentityManager.Controllers
             }
         }
     }
+
+    public abstract class HomeController<TUser> : HomeController<TUser, ApplicationRole> where TUser : ApplicationUser, new()
+    {
+        public HomeController(UserManager<TUser> userManager, RoleManager<ApplicationRole> roleManager, ILogger<HomeController<TUser>> logger) : base(userManager, roleManager, logger) { }
+	}
 }
